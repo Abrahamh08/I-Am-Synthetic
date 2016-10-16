@@ -35,25 +35,22 @@ char *getRandomTitle() {
             strcpy(title, line);
     }
     fclose(fp);
+    title[strcspn(title, "\n")] = 0;
     return title;
 }
 
 int main() {
-    printf("!!!!");
-    glewExperimental = GL_TRUE;
-    #ifndef __APPLE__
-    if (glewInit() != GLEW_OK) {
-        printf("!!");
-        glfwTerminate();
+    printf("!!!!\n"); srand(time(NULL)); glfwSetErrorCallback(error_callback);
+    printf("!!!\n");
+    if (!glfwInit()) {
+        printf("ytho\n");
         exit(EXIT_FAILURE);
     }
-    #endif
-    srand(time(NULL));
-    glfwSetErrorCallback(error_callback);
-    printf("!!!");
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-    printf("!");
+    printf("everything is k\n");
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     char *title = getRandomTitle();
     GLFWwindow* window = glfwCreateWindow(640, 480, title, NULL, NULL);
     free(title);
@@ -61,13 +58,28 @@ int main() {
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(window);
+    printf("good good\n");
+    glewExperimental = GL_TRUE;
+    GLenum err = glewInit();
+    if (err != GLEW_OK) {
+        printf("%s\n", glewGetErrorString(err));
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+    printf("!\n");
     int width, height;
+    printf("memee\n");
     glfwGetFramebufferSize(window, &width, &height);
+    printf("meeeem\n");
     glViewport(0, 0, width, height);
     GLuint VBO;
+    printf("mem\n");
     glGenBuffers(1, &VBO);
+    printf("memr\n");
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    printf("derp\n");
     create();
+    printf("meems\n");
     while (!glfwWindowShouldClose(window)) {
         glfwSwapBuffers(window);
         glfwPollEvents();
