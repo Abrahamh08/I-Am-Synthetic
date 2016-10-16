@@ -20,17 +20,22 @@ static void create() {
     printf("%s", chapterSelectBtn.x);
 }
 
-char *getRandomTitle() {
+char* concat(const char *s1, const char *s2)
+{
+    char *result = malloc(strlen(s1)+strlen(s2) + 1);
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
+
+char *getRandomTitle(char* path) {
     char titleSize = 40;
     char *title = malloc(titleSize);
     char line[titleSize];
     char count = 0;
-    FILE *fp = fopen("titles.txt", "r");
+    FILE *fp = fopen(concat(path, "/titles.txt"), "r");
     while (fgets(line, titleSize, fp) != NULL) {
         count++;
-        printf("%f\n", (float)RAND_MAX);
-        printf("%d\n", rand());
-        printf("%f\n", (float) rand() / (float)RAND_MAX);
         if ((float) rand() / (float)RAND_MAX <= (1.0 / count))
             strcpy(title, line);
     }
@@ -39,26 +44,26 @@ char *getRandomTitle() {
     return title;
 }
 
-int main() {
-    printf("!!!!\n"); srand(time(NULL)); glfwSetErrorCallback(error_callback);
-    printf("!!!\n");
+int main(int argc, char *argv[]) {
+    srand(time(NULL)); glfwSetErrorCallback(error_callback);
     if (!glfwInit()) {
-        printf("ytho\n");
         exit(EXIT_FAILURE);
     }
-    printf("everything is k\n");
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    char *title = getRandomTitle();
+    int nameLen = strlen(argv[0]) - (strrchr(argv[0], '/') - argv[0]);
+    char substr[strlen(argv[0]) - nameLen + 1];
+    strncpy(substr, argv[0], sizeof(substr));
+    substr[sizeof substr - 1] = 0;
+    char *title = getRandomTitle(substr);
     GLFWwindow* window = glfwCreateWindow(640, 480, title, NULL, NULL);
     free(title);
     if (!window) {
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(window);
-    printf("good good\n");
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (err != GLEW_OK) {
@@ -66,20 +71,13 @@ int main() {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
-    printf("!\n");
     int width, height;
-    printf("memee\n");
     glfwGetFramebufferSize(window, &width, &height);
-    printf("meeeem\n");
     glViewport(0, 0, width, height);
     GLuint VBO;
-    printf("mem\n");
     glGenBuffers(1, &VBO);
-    printf("memr\n");
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    printf("derp\n");
     create();
-    printf("meems\n");
     while (!glfwWindowShouldClose(window)) {
         glfwSwapBuffers(window);
         glfwPollEvents();
