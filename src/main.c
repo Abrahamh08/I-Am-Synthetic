@@ -1,11 +1,5 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
-#ifdef __APPLE__
-#  include <OpenGL/gl.h>
-#  include <OpenGL/glext.h>
-#else
-#  include "GL/GL.h"
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
