@@ -45,6 +45,12 @@ char *getRandomTitle(char* path) {
 }
 
 int main(int argc, char *argv[]) {
+    const char kPathSeparator =
+    #ifdef _WIN32
+        '\\';
+        #else
+        '/';
+    #endif
     srand(time(NULL)); glfwSetErrorCallback(error_callback);
     if (!glfwInit()) {
         exit(EXIT_FAILURE);
@@ -53,10 +59,13 @@ int main(int argc, char *argv[]) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    int nameLen = strlen(argv[0]) - (strrchr(argv[0], '/') - argv[0]);
+    printf("meems\n");
+    printf(argv[0]);
+    int nameLen = strlen(argv[0]) - (strrchr(argv[0], kPathSeparator) - argv[0]);
     char substr[strlen(argv[0]) - nameLen + 1];
     strncpy(substr, argv[0], sizeof(substr));
     substr[sizeof substr - 1] = 0;
+    printf("derp\n");
     char *title = getRandomTitle(substr);
     GLFWwindow* window = glfwCreateWindow(640, 480, title, NULL, NULL);
     free(title);
@@ -64,6 +73,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(window);
+    printf("test\n");
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (err != GLEW_OK) {
@@ -72,6 +82,7 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     int width, height;
+    printf("test2\n");
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
     GLuint VBO;
