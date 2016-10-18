@@ -12,12 +12,19 @@ static void error_callback(int error, const char* description) {
 
 static void create() {
     struct Buttons_s {
-        char *x;
-        char *y;
-    } Buttons_default = {"x"};
+        int x;
+        int y;
+        char *text;
+    } Buttons_default = {0, 0};
     typedef struct Buttons_s Buttons;
     Buttons chapterSelectBtn = Buttons_default;
-    printf("%s", chapterSelectBtn.x);
+    chapterSelectBtn.text = "Select Chapter";
+
+    Buttons creditsBtn = Buttons_default;
+    creditsBtn.text = "Credits";
+
+    // createButton(chapterSelectBtn);
+    // createButton(creditsBtn);
 }
 
 char* concat(const char *s1, const char *s2)
@@ -59,8 +66,6 @@ int main(int argc, char *argv[]) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    printf("meems\n");
-    printf(argv[0]);
     int nameLen = strlen(argv[0]) - (strrchr(argv[0], kPathSeparator) - argv[0]);
     char substr[strlen(argv[0]) - nameLen + 1];
     strncpy(substr, argv[0], sizeof(substr));
@@ -73,7 +78,6 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(window);
-    printf("test\n");
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (err != GLEW_OK) {
@@ -82,7 +86,6 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     int width, height;
-    printf("test2\n");
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
     GLuint VBO;
