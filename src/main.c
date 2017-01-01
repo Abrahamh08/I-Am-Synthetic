@@ -6,16 +6,33 @@
 #include <GLFW/glfw3.h>
 #include <time.h>
 
+struct Buttons_s {
+    int x;
+    int y;
+    char *text;
+} Buttons_default = {0, 0};
+ 
+
 static void error_callback(int error, const char* description) {
     fprintf(stderr, "Error: %s,\n", description);
 }
 
+static void createButton(struct Buttons_s btn) {
+    GLfloat vertices[] = {
+        // First triangle
+         0.5f,  0.5f, 0.0f,  // Top Right
+         0.5f, -0.5f, 0.0f,  // Bottom Right
+        -0.5f,  0.5f, 0.0f,  // Top Left 
+
+        // Second triangle
+         0.5f, -0.5f, 0.0f,  // Bottom Right
+        -0.5f, -0.5f, 0.0f,  // Bottom Left
+        -0.5f,  0.5f, 0.0f   // Top Left
+    }; 
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+}
+
 static void create() {
-    struct Buttons_s {
-        int x;
-        int y;
-        char *text;
-    } Buttons_default = {0, 0};
     typedef struct Buttons_s Buttons;
     Buttons chapterSelectBtn = Buttons_default;
     chapterSelectBtn.text = "Select Chapter";
@@ -23,8 +40,8 @@ static void create() {
     Buttons creditsBtn = Buttons_default;
     creditsBtn.text = "Credits";
 
-    // createButton(chapterSelectBtn);
-    // createButton(creditsBtn);
+    createButton(chapterSelectBtn);
+    createButton(creditsBtn);
 }
 
 char* concat(const char *s1, const char *s2)
@@ -66,6 +83,7 @@ int main(int argc, char *argv[]) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     int nameLen = strlen(argv[0]) - (strrchr(argv[0], kPathSeparator) - argv[0]);
     char substr[strlen(argv[0]) - nameLen + 1];
     strncpy(substr, argv[0], sizeof(substr));
